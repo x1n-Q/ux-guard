@@ -2,7 +2,7 @@
 # on every PR. Doubles as a CI signal that the action.yml still works.
 #
 # To use ux-guard in your own repo, copy this file and change:
-#   uses: ./   ->   uses: x1n-Q/ux-guard@v0.1.1
+#   uses: ./   ->   uses: x1n-Q/ux-guard@v0.1.2
 name: UX Guard
 
 on:

@@ -23,7 +23,7 @@ inputs:
     required: false
     default: "true"
   version:
-    description: "ux-guard npm version to use (passed to npx). Pin for reproducible runs."
+    description: "ux-guard npm version to install. Pin for reproducible runs."
     required: false
     default: "0.1.0"
   working-directory:
@@ -53,6 +53,23 @@ runs:
       with:
         node-version: "20"
 
+    - name: Install ux-guard CLI
+      id: install
+      shell: bash
+      run: |
+        set -euo pipefail
+        TOOL_DIR="$(mktemp -d)"
+        echo "Installing ux-guard@${{ inputs.version }}..."
+        npm install --silent --no-audit --no-fund --prefix "$TOOL_DIR" "ux-guard@${{ inputs.version }}"
+
+        CLI_PATH="$TOOL_DIR/node_modules/ux-guard/dist/index.js"
+        if [ ! -f "$CLI_PATH" ]; then
+          echo "::error title=ux-guard::Unable to find installed CLI at $CLI_PATH"
+          exit 1
+        fi
+
+        echo "cli_path=$CLI_PATH" >> "$GITHUB_OUTPUT"
+
     - name: Run ux-guard scan (JSON)
       id: scan
       shell: bash
@@ -60,7 +77,7 @@ runs:
       run: |
         set -euo pipefail
         echo "Running ux-guard@${{ inputs.version }} on ${{ inputs.path }}..."
-        npx --yes ux-guard@${{ inputs.version }} scan "${{ inputs.path }}" --json \
+        node "${{ steps.install.outputs.cli_path }}" scan "${{ inputs.path }}" --json \
           > ux-guard-report.json
 
         # Surface key stats as job outputs.
@@ -84,7 +101,7 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         set -euo pipefail
-        npx --yes ux-guard@${{ inputs.version }} report "${{ inputs.path }}" --markdown \
+        node "${{ steps.install.outputs.cli_path }}" report "${{ inputs.path }}" --markdown \
           > ux-guard-report.md
 
         {

@@ -22,7 +22,7 @@ jobs:
       pull-requests: write   # required for PR comments
     steps:
       - uses: actions/checkout@v4
-      - uses: x1n-Q/ux-guard@v0.1.1
+      - uses: x1n-Q/ux-guard@v0.1.2
         with:
           path: ./src
           fail-on: error
@@ -60,7 +60,7 @@ Example using outputs:
 
 ```yaml
 - id: ux
-  uses: x1n-Q/ux-guard@v0.1.1
+  uses: x1n-Q/ux-guard@v0.1.2
   with:
     path: ./src
     fail-on: off
@@ -78,7 +78,7 @@ creates a new one. You'll never get a thread of stale ux-guard comments.
 Set `working-directory` to the package you want to scan:
 
 ```yaml
-- uses: x1n-Q/ux-guard@v0.1.1
+- uses: x1n-Q/ux-guard@v0.1.2
   with:
     working-directory: apps/web
     path: ./src
@@ -86,14 +86,14 @@ Set `working-directory` to the package you want to scan:
 
 ## Pinning a version
 
-Use the current release tag: `x1n-Q/ux-guard@v0.1.1`
+Use the current release tag: `x1n-Q/ux-guard@v0.1.2`
 
 Or a specific commit: `x1n-Q/ux-guard@<sha>`
 
 The `version` input controls the npm package version that the action runs:
 
 ```yaml
-- uses: x1n-Q/ux-guard@v0.1.1
+- uses: x1n-Q/ux-guard@v0.1.2
   with:
     version: "0.1.0"
 ```

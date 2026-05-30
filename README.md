@@ -146,7 +146,7 @@ jobs:
       pull-requests: write   # for sticky PR comments
     steps:
       - uses: actions/checkout@v4
-      - uses: x1n-Q/ux-guard@v0.1.1
+      - uses: x1n-Q/ux-guard@v0.1.2
         with:
           path: ./src
           fail-on: error

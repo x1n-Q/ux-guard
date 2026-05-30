@@ -101,7 +101,7 @@ This loop is what makes AI-generated UIs *actually* feel finished.
 The agent's loop is great for development. For PR safety, also add the [GitHub Action](./github-action.md):
 
 ```yaml
-- uses: x1n-Q/ux-guard@v0.1.1
+- uses: x1n-Q/ux-guard@v0.1.2
   with:
     path: ./src
     fail-on: error
