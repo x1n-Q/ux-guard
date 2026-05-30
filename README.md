@@ -18,6 +18,8 @@
 
 It's the missing-state checker for modern web apps — built for **humans** *and* for **AI coding agents**.
 
+> **🌟 Try the interactive demo:** [https://x1n-Q.github.io/ux-guard](https://x1n-Q.github.io/ux-guard)
+
 ---
 
 ## Why this exists
