@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 /**
- * uxlint MCP server
+ * uxaudit MCP server
  * -----------------
- * Exposes uxlint as a Model Context Protocol (MCP) server so AI coding agents
+ * Exposes uxaudit as a Model Context Protocol (MCP) server so AI coding agents
  * (Claude Desktop, Cursor, Blackbox Code, etc.) can call it directly as a tool
  * before declaring a UI feature "done".
  *
  * Tools provided:
- *   - uxlint_scan        : scan a path, return human-readable summary + issues
- *   - uxlint_scan_json   : scan a path, return raw machine-readable JSON
- *   - uxlint_report      : scan a path, return a markdown report
- *   - uxlint_list_rules  : list all available rules and their default severities
+ *   - uxaudit_scan        : scan a path, return human-readable summary + issues
+ *   - uxaudit_scan_json   : scan a path, return raw machine-readable JSON
+ *   - uxaudit_report      : scan a path, return a markdown report
+ *   - uxaudit_list_rules  : list all available rules and their default severities
  *
  * Transport: stdio (the standard for editor/desktop MCP clients).
  *
  * Install in Claude Desktop (~/Library/Application Support/Claude/claude_desktop_config.json):
  * {
  *   "mcpServers": {
- *     "uxlint": { "command": "npx", "args": ["-y", "@x1n-q/uxlint-mcp"] }
+ *     "uxaudit": { "command": "npx", "args": ["-y", "uxaudit-mcp"] }
  *   }
  * }
  */
@@ -36,7 +36,7 @@ import {
   renderMarkdown,
   ALL_RULES,
   type ScanResult,
-} from "@x1n-q/uxlint-core";
+} from "uxaudit-core";
 
 // ---------- Tool input schemas ----------
 
@@ -50,7 +50,7 @@ const ScanInput = z.object({
     .string()
     .optional()
     .describe(
-      "Optional working directory to resolve relative paths and to look for uxlint.config.* in. Defaults to process.cwd().",
+      "Optional working directory to resolve relative paths and to look for uxaudit.config.* in. Defaults to process.cwd().",
     ),
 });
 
@@ -64,7 +64,7 @@ function summarize(result: ScanResult): string {
   const infos = result.issues.filter((i) => i.severity === "info").length;
   const lines: string[] = [];
   lines.push(
-    `uxlint score: ${result.score}/100   (${result.filesScanned} files, ${result.issues.length} issues: ${errors} error, ${warns} warn, ${infos} info)`,
+    `uxaudit score: ${result.score}/100   (${result.filesScanned} files, ${result.issues.length} issues: ${errors} error, ${warns} warn, ${infos} info)`,
   );
   if (result.issues.length === 0) {
     lines.push("");
@@ -82,7 +82,7 @@ function summarize(result: ScanResult): string {
   }
   if (result.issues.length > 50) {
     lines.push(
-      `  …and ${result.issues.length - 50} more. Call uxlint_scan_json for the full list.`,
+      `  …and ${result.issues.length - 50} more. Call uxaudit_scan_json for the full list.`,
     );
   }
   return lines.join("\n");
@@ -98,7 +98,7 @@ async function runScan(input: ScanInputT): Promise<ScanResult> {
 
 const server = new Server(
   {
-    name: "uxlint",
+    name: "uxaudit",
     version: "0.1.0",
   },
   {
@@ -112,7 +112,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
   return {
     tools: [
       {
-        name: "uxlint_scan",
+        name: "uxaudit_scan",
         description:
           "Scan a React/Next.js path for missing UX states (loading, empty, error, validation, disabled submit, success feedback). Returns a human-readable summary with a 0–100 completeness score and per-issue fix hints. Call this BEFORE declaring a UI feature 'done'.",
         inputSchema: {
@@ -133,9 +133,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
-        name: "uxlint_scan_json",
+        name: "uxaudit_scan_json",
         description:
-          "Same as uxlint_scan but returns raw machine-readable JSON wrapped as an AI-agent task (with `task`, `instruction`, `summary`, `issues[]` including `aiFixHint`). Use this when you want to programmatically iterate over issues to fix them.",
+          "Same as uxaudit_scan but returns raw machine-readable JSON wrapped as an AI-agent task (with `task`, `instruction`, `summary`, `issues[]` including `aiFixHint`). Use this when you want to programmatically iterate over issues to fix them.",
         inputSchema: {
           type: "object",
           properties: {
@@ -146,7 +146,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
-        name: "uxlint_report",
+        name: "uxaudit_report",
         description:
           "Generate a markdown UX completeness report for the given path. Great for PR comments or sharing with humans.",
         inputSchema: {
@@ -159,9 +159,9 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
         },
       },
       {
-        name: "uxlint_list_rules",
+        name: "uxaudit_list_rules",
         description:
-          "List all available uxlint rules with their default severities and descriptions.",
+          "List all available uxaudit rules with their default severities and descriptions.",
         inputSchema: { type: "object", properties: {} },
       },
     ],
@@ -173,7 +173,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const args = (req.params.arguments ?? {}) as Record<string, unknown>;
 
   try {
-    if (name === "uxlint_scan") {
+    if (name === "uxaudit_scan") {
       const input = ScanInput.parse(args);
       const result = await runScan(input);
       return {
@@ -181,7 +181,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       };
     }
 
-    if (name === "uxlint_scan_json") {
+    if (name === "uxaudit_scan_json") {
       const input = ScanInput.parse(args);
       const result = await runScan(input);
       return {
@@ -189,7 +189,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       };
     }
 
-    if (name === "uxlint_report") {
+    if (name === "uxaudit_report") {
       const input = ScanInput.parse(args);
       const result = await runScan(input);
       return {
@@ -197,7 +197,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       };
     }
 
-    if (name === "uxlint_list_rules") {
+    if (name === "uxaudit_list_rules") {
       const rows = ALL_RULES.map(
         (r) => `- ${r.id} (${r.defaultSeverity}): ${r.description}`,
       ).join("\n");
@@ -205,7 +205,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
         content: [
           {
             type: "text",
-            text: `uxlint rules:\n\n${rows}\n\nConfigure in uxlint.config.{js,json} under the "rules" key.`,
+            text: `uxaudit rules:\n\n${rows}\n\nConfigure in uxaudit.config.{js,json} under the "rules" key.`,
           },
         ],
       };
@@ -218,7 +218,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return {
-      content: [{ type: "text", text: `uxlint error: ${msg}` }],
+      content: [{ type: "text", text: `uxaudit error: ${msg}` }],
       isError: true,
     };
   }
@@ -228,10 +228,10 @@ async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
   // Log to stderr so it doesn't interfere with stdio transport on stdout.
-  process.stderr.write("uxlint MCP server running on stdio.\n");
+  process.stderr.write("uxaudit MCP server running on stdio.\n");
 }
 
 main().catch((err) => {
-  process.stderr.write(`uxlint-mcp fatal: ${err?.stack || err}\n`);
+  process.stderr.write(`uxaudit-mcp fatal: ${err?.stack || err}\n`);
   process.exit(1);
 });

@@ -1,11 +1,11 @@
 {
-  "name": "@x1n-q/uxlint",
+  "name": "uxaudit",
   "version": "0.1.0",
-  "description": "ESLint catches bad code. uxlint catches unfinished UX. A linter for missing UI states (loading, empty, error, validation, disabled submit, success feedback) in React / Next.js. Built for humans and AI coding agents.",
+  "description": "ESLint catches bad code. uxaudit catches unfinished UX. A linter for missing UI states (loading, empty, error, validation, disabled submit, success feedback) in React / Next.js. Built for humans and AI coding agents.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "uxlint": "dist/index.js"
+    "uxaudit": "dist/index.js"
   },
   "files": [
     "dist",
@@ -17,8 +17,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@x1n-q/uxlint-core": "0.1.0",
-    "@x1n-q/uxlint-react": "0.1.0",
+    "uxaudit-core": "0.1.0",
+    "uxaudit-react": "0.1.0",
     "commander": "^12.1.0",
     "picocolors": "^1.0.1"
   },
@@ -44,13 +44,13 @@
   ],
   "author": "Daniel Depaor <https://github.com/x1n-Q>",
   "license": "MIT",
-  "homepage": "https://github.com/x1n-Q/uxlint#readme",
+  "homepage": "https://github.com/x1n-Q/uxaudit#readme",
   "bugs": {
-    "url": "https://github.com/x1n-Q/uxlint/issues"
+    "url": "https://github.com/x1n-Q/uxaudit/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/x1n-Q/uxlint.git",
+    "url": "git+https://github.com/x1n-Q/uxaudit.git",
     "directory": "packages/cli"
   },
   "engines": {

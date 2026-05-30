@@ -6,7 +6,7 @@ Good morning! Here's everything I shipped overnight.
 
 ✅ Real-world test on `404game` — found and **fixed 5 false positives**
 ✅ **31 vitest unit tests** added — all passing
-✅ **`@x1n-q/uxlint-mcp`** — full MCP server, verified working with the official MCP client SDK
+✅ **`@x1n-q/uxaudit-mcp`** — full MCP server, verified working with the official MCP client SDK
 
 ```
 Test Files  8 passed (8)
@@ -17,7 +17,7 @@ Test Files  8 passed (8)
 
 ## 1. Real-world dogfood on `404game`
 
-**Before tuning:** uxlint flagged 5 false-positive `missing_success_feedback` issues in `404game/src/games/*.ts` (Breakout, Dino, Flappy, Invaders, Snake) — because it saw `createBreakout()`, `update()`, etc. as "action handlers".
+**Before tuning:** uxaudit flagged 5 false-positive `missing_success_feedback` issues in `404game/src/games/*.ts` (Breakout, Dino, Flappy, Invaders, Snake) — because it saw `createBreakout()`, `update()`, etc. as "action handlers".
 
 **Root cause:** the rules were running on **any** TS file. But UX rules only make sense for **React/JSX UI components**, not for plain game-loop modules.
 
@@ -53,35 +53,35 @@ Each rule test uses a tiny in-memory ts-morph project — fast (~11s total).
 
 ---
 
-## 3. `@x1n-q/uxlint-mcp` — the AI-agent moat 🤖
+## 3. `@x1n-q/uxaudit-mcp` — the AI-agent moat 🤖
 
-New 4th package: a full **Model Context Protocol** server that lets Claude Desktop / Cursor / Blackbox Code / any MCP client call uxlint as a tool.
+New 4th package: a full **Model Context Protocol** server that lets Claude Desktop / Cursor / Blackbox Code / any MCP client call uxaudit as a tool.
 
 **Files:**
 - `packages/mcp/src/index.ts` — stdio server, 4 tools
 - `packages/mcp/test-smoke.js` — end-to-end smoke test using real MCP client SDK
-- `packages/mcp/package.json` — exposes `uxlint-mcp` bin
+- `packages/mcp/package.json` — exposes `uxaudit-mcp` bin
 
 **Tools exposed:**
 
 | Tool                | Returns                                                       |
 | ------------------- | ------------------------------------------------------------- |
-| `uxlint_scan`       | Human-readable summary with score + per-issue fix hints       |
-| `uxlint_scan_json`  | Raw agent-task JSON (`task`, `instruction`, `issues[]`)       |
-| `uxlint_report`     | Markdown report (great for the agent to paste in a PR comment)|
-| `uxlint_list_rules` | All 6 rules with default severities                           |
+| `uxaudit_scan`       | Human-readable summary with score + per-issue fix hints       |
+| `uxaudit_scan_json`  | Raw agent-task JSON (`task`, `instruction`, `issues[]`)       |
+| `uxaudit_report`     | Markdown report (great for the agent to paste in a PR comment)|
+| `uxaudit_list_rules` | All 6 rules with default severities                           |
 
 **Verified working** — smoke test connects via real `StdioClientTransport`, lists tools, calls every tool, and validates outputs:
 
 ```
-✓ connected to uxlint MCP server
-✓ listed 4 tools: uxlint_scan, uxlint_scan_json, uxlint_report, uxlint_list_rules
-✓ uxlint_scan returned summary (first 200 chars):
-  uxlint score: 0/100   (5 files, 11 issues: 4 error, 7 warn, 0 info)
+✓ connected to uxaudit MCP server
+✓ listed 4 tools: uxaudit_scan, uxaudit_scan_json, uxaudit_report, uxaudit_list_rules
+✓ uxaudit_scan returned summary (first 200 chars):
+  uxaudit score: 0/100   (5 files, 11 issues: 4 error, 7 warn, 0 info)
   ...
-✓ uxlint_scan_json returned valid agent JSON (score=0, issues=11)
-✓ uxlint_list_rules returned 6 rules
-✓ uxlint_report returned markdown
+✓ uxaudit_scan_json returned valid agent JSON (score=0, issues=11)
+✓ uxaudit_list_rules returned 6 rules
+✓ uxaudit_report returned markdown
 ✅ All MCP smoke tests passed.
 ```
 
@@ -90,12 +90,12 @@ New 4th package: a full **Model Context Protocol** server that lets Claude Deskt
 ```json
 {
   "mcpServers": {
-    "uxlint": { "command": "npx", "args": ["-y", "@x1n-q/uxlint-mcp"] }
+    "uxaudit": { "command": "npx", "args": ["-y", "@x1n-q/uxaudit-mcp"] }
   }
 }
 ```
 
-Now an agent can run uxlint **before** saying "feature done." That's the whole selling point of the product — and it works.
+Now an agent can run uxaudit **before** saying "feature done." That's the whole selling point of the product — and it works.
 
 ---
 
@@ -126,7 +126,7 @@ README.md  (updated)
 - `packages/core/src/rules/loading-state.ts` — uses helper, gated on React files
 - `packages/core/src/rules/error-state.ts` — uses helper, gated on React files
 - `packages/core/src/rules/success-feedback.ts` — uses helper + tighter handler pattern
-- `package.json` (root) — added vitest, build now includes `@x1n-q/uxlint-mcp`
+- `package.json` (root) — added vitest, build now includes `@x1n-q/uxaudit-mcp`
 
 ---
 
@@ -134,10 +134,10 @@ README.md  (updated)
 
 In order of impact:
 
-1. **`npm link` in `packages/cli/`** so you can run `uxlint scan ./src` from anywhere on this machine and try it on more real projects.
-2. **Hook up the MCP server to your local agent** (Claude Desktop / Cursor) and feel what it's like to have an AI run uxlint automatically.
-3. **Init a git repo** and push to GitHub — `cd /data/data/com.termux/files/home/projects/uxlint && git init && git add . && git commit -m "feat: uxlint MVP with MCP + tests"`.
-4. **Publish** — check if `uxlint` is taken on npm; if not, `npm publish --access public` from each package (core, react, cli, mcp). Versioned at `0.1.0`.
+1. **`npm link` in `packages/cli/`** so you can run `uxaudit scan ./src` from anywhere on this machine and try it on more real projects.
+2. **Hook up the MCP server to your local agent** (Claude Desktop / Cursor) and feel what it's like to have an AI run uxaudit automatically.
+3. **Init a git repo** and push to GitHub — `cd /data/data/com.termux/files/home/projects/uxaudit && git init && git add . && git commit -m "feat: uxaudit MVP with MCP + tests"`.
+4. **Publish** — check if `uxaudit` is taken on npm; if not, `npm publish --access public` from each package (core, react, cli, mcp). Versioned at `0.1.0`.
 5. **Land a `loading.tsx`/`error.tsx` awareness pass** for Next.js App Router so we don't double-flag files that already have route-level fallbacks.
 
 Sleep well. ☕

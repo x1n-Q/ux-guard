@@ -1,10 +1,10 @@
-name: "uxlint — UX completeness check"
+name: "uxaudit — UX completeness check"
 description: >
   Scan React / Next.js code for missing UX states (loading, empty, error,
   validation, disabled submit, success feedback) and optionally post a
-  markdown report as a PR comment. ESLint catches bad code — uxlint catches
+  markdown report as a PR comment. ESLint catches bad code — uxaudit catches
   unfinished UX.
-author: "uxlint"
+author: "uxaudit"
 branding:
   icon: "check-circle"
   color: "purple"
@@ -27,17 +27,17 @@ inputs:
     required: false
     default: "true"
   version:
-    description: "uxlint npm version to use (passed to npx). Default: latest."
+    description: "uxaudit npm version to use (passed to npx). Default: latest."
     required: false
     default: "latest"
   working-directory:
-    description: "Subdirectory to run uxlint in (default: repo root)."
+    description: "Subdirectory to run uxaudit in (default: repo root)."
     required: false
     default: "."
 
 outputs:
   score:
-    description: "uxlint score 0–100."
+    description: "uxaudit score 0–100."
     value: ${{ steps.scan.outputs.score }}
   issue-count:
     description: "Total number of issues found."
@@ -57,21 +57,21 @@ runs:
       with:
         node-version: "20"
 
-    - name: Run uxlint scan (JSON)
+    - name: Run uxaudit scan (JSON)
       id: scan
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
         set -euo pipefail
-        echo "Running uxlint@${{ inputs.version }} on ${{ inputs.path }}..."
-        npx --yes uxlint@${{ inputs.version }} scan "${{ inputs.path }}" --json \
-          > uxlint-report.json
+        echo "Running uxaudit@${{ inputs.version }} on ${{ inputs.path }}..."
+        npx --yes uxaudit@${{ inputs.version }} scan "${{ inputs.path }}" --json \
+          > uxaudit-report.json
 
         # Surface key stats as job outputs.
-        SCORE=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxlint-report.json','utf8')).score)")
-        ISSUES=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxlint-report.json','utf8')).issueCount)")
-        ERRORS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxlint-report.json','utf8')).issues.filter(i=>i.severity==='error').length)")
-        WARNS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxlint-report.json','utf8')).issues.filter(i=>i.severity==='warn').length)")
+        SCORE=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxaudit-report.json','utf8')).score)")
+        ISSUES=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxaudit-report.json','utf8')).issueCount)")
+        ERRORS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxaudit-report.json','utf8')).issues.filter(i=>i.severity==='error').length)")
+        WARNS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxaudit-report.json','utf8')).issues.filter(i=>i.severity==='warn').length)")
 
         {
           echo "score=$SCORE"
@@ -80,7 +80,7 @@ runs:
           echo "warnings=$WARNS"
         } >> "$GITHUB_OUTPUT"
 
-        echo "::notice title=uxlint::Score $SCORE/100 — $ISSUES issues ($ERRORS error, $WARNS warn)"
+        echo "::notice title=uxaudit::Score $SCORE/100 — $ISSUES issues ($ERRORS error, $WARNS warn)"
 
     - name: Generate markdown report
       id: report
@@ -88,25 +88,25 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         set -euo pipefail
-        npx --yes uxlint@${{ inputs.version }} report "${{ inputs.path }}" --markdown \
-          > uxlint-report.md
+        npx --yes uxaudit@${{ inputs.version }} report "${{ inputs.path }}" --markdown \
+          > uxaudit-report.md
 
         {
-          echo "## 🎨 uxlint — UX Completeness Check"
+          echo "## 🎨 uxaudit — UX Completeness Check"
           echo ""
           echo "**Score:** ${{ steps.scan.outputs.score }}/100"
           echo "**Issues:** ${{ steps.scan.outputs.errors }} error, ${{ steps.scan.outputs.warnings }} warn"
           echo ""
-          cat uxlint-report.md
-        } > uxlint-pr-comment.md
+          cat uxaudit-report.md
+        } > uxaudit-pr-comment.md
 
     - name: Upload report artifact
       uses: actions/upload-artifact@v4
       with:
-        name: uxlint-report
+        name: uxaudit-report
         path: |
-          ${{ inputs.working-directory }}/uxlint-report.json
-          ${{ inputs.working-directory }}/uxlint-report.md
+          ${{ inputs.working-directory }}/uxaudit-report.json
+          ${{ inputs.working-directory }}/uxaudit-report.md
         if-no-files-found: warn
 
     - name: Comment on PR
@@ -118,9 +118,9 @@ runs:
         script: |
           const fs = require('fs');
           const path = require('path');
-          const file = path.join(process.env.WORKING_DIR || '.', 'uxlint-pr-comment.md');
+          const file = path.join(process.env.WORKING_DIR || '.', 'uxaudit-pr-comment.md');
           const body = fs.readFileSync(file, 'utf8');
-          const marker = '<!-- uxlint-report -->';
+          const marker = '<!-- uxaudit-report -->';
           const fullBody = `${marker}\n${body}`;
 
           const { owner, repo } = context.repo;
@@ -130,7 +130,7 @@ runs:
             return;
           }
 
-          // Update an existing uxlint comment if present, otherwise create one.
+          // Update an existing uxaudit comment if present, otherwise create one.
           const comments = await github.paginate(github.rest.issues.listComments, {
             owner, repo, issue_number, per_page: 100,
           });
@@ -139,12 +139,12 @@ runs:
             await github.rest.issues.updateComment({
               owner, repo, comment_id: existing.id, body: fullBody,
             });
-            core.info(`Updated existing uxlint PR comment #${existing.id}.`);
+            core.info(`Updated existing uxaudit PR comment #${existing.id}.`);
           } else {
             await github.rest.issues.createComment({
               owner, repo, issue_number, body: fullBody,
             });
-            core.info('Created uxlint PR comment.');
+            core.info('Created uxaudit PR comment.');
           }
 
     - name: Enforce fail-on threshold
@@ -157,7 +157,7 @@ runs:
         set -euo pipefail
         node <<'EOF'
         const fs = require('fs');
-        const report = JSON.parse(fs.readFileSync('uxlint-report.json', 'utf8'));
+        const report = JSON.parse(fs.readFileSync('uxaudit-report.json', 'utf8'));
         const order = { info: 1, warn: 2, error: 3 };
         const t = order[process.env.FAIL_ON];
         if (!t) {
@@ -166,8 +166,8 @@ runs:
         }
         const hit = report.issues.some((i) => order[i.severity] >= t);
         if (hit) {
-          console.error(`::error title=uxlint::Failing because issues at or above "${process.env.FAIL_ON}" were found.`);
+          console.error(`::error title=uxaudit::Failing because issues at or above "${process.env.FAIL_ON}" were found.`);
           process.exit(1);
         }
-        console.log(`uxlint OK — no issues at or above "${process.env.FAIL_ON}".`);
+        console.log(`uxaudit OK — no issues at or above "${process.env.FAIL_ON}".`);
         EOF

@@ -7,7 +7,7 @@ import {
   renderJson,
   renderAgentJson,
   type Severity,
-} from "@x1n-q/uxlint-core";
+} from "uxaudit-core";
 
 type ScanFlags = {
   json?: boolean;
@@ -55,7 +55,7 @@ export function registerScan(program: Command) {
           if (!flags.json) {
             process.stderr.write(
               pc.red(
-                `\nuxlint: failing because issues at or above "${threshold}" were found.\n`,
+                `\nuxaudit: failing because issues at or above "${threshold}" were found.\n`,
               ),
             );
           }

@@ -1,11 +1,11 @@
 {
-  "name": "@x1n-q/uxlint-mcp",
+  "name": "uxaudit-mcp",
   "version": "0.1.0",
-  "description": "MCP (Model Context Protocol) server that exposes uxlint as a tool for AI coding agents (Claude Desktop, Cursor, Blackbox Code, etc).",
+  "description": "MCP (Model Context Protocol) server that exposes uxaudit as a tool for AI coding agents (Claude Desktop, Cursor, Blackbox Code, etc).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "uxlint-mcp": "dist/index.js"
+    "uxaudit-mcp": "dist/index.js"
   },
   "files": [
     "dist",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
-    "@x1n-q/uxlint-core": "0.1.0",
+    "uxaudit-core": "0.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -27,7 +27,7 @@
     "@types/node": "^20.14.10"
   },
   "keywords": [
-    "uxlint",
+    "uxaudit",
     "mcp",
     "model-context-protocol",
     "ai",
@@ -40,13 +40,13 @@
   ],
   "author": "Daniel Depaor <https://github.com/x1n-Q>",
   "license": "MIT",
-  "homepage": "https://github.com/x1n-Q/uxlint#readme",
+  "homepage": "https://github.com/x1n-Q/uxaudit#readme",
   "bugs": {
-    "url": "https://github.com/x1n-Q/uxlint/issues"
+    "url": "https://github.com/x1n-Q/uxaudit/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/x1n-Q/uxlint.git",
+    "url": "git+https://github.com/x1n-Q/uxaudit.git",
     "directory": "packages/mcp"
   },
   "engines": {

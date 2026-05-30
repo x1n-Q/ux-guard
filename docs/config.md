@@ -3,8 +3,8 @@
 Create a config file at the root of your project:
 
 ```bash
-npx uxlint init        # creates uxlint.config.ts
-npx uxlint init --js   # creates uxlint.config.js
+npx uxaudit init        # creates uxaudit.config.ts
+npx uxaudit init --js   # creates uxaudit.config.js
 ```
 
 ## Shape
@@ -46,5 +46,5 @@ export default {
 ## Notes
 
 - In the MVP, `.js`, `.cjs`, and `.json` configs are loaded directly.
-  TypeScript configs (`uxlint.config.ts`) are recognized but currently fall back
+  TypeScript configs (`uxaudit.config.ts`) are recognized but currently fall back
   to defaults with a warning — use `--js` for now or write a `.cjs` file.

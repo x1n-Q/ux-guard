@@ -68,7 +68,7 @@ function collectAppSegments(
 /**
  * Build the RouteContext for a given absolute file path.
  *
- * `projectRoot` should be the cwd uxlint was invoked from (used as a
+ * `projectRoot` should be the cwd uxaudit was invoked from (used as a
  * safety stop so we don't walk past the project boundary).
  *
  * This call is cheap (a few `fs.existsSync` calls per segment) and the

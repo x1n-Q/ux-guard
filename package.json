@@ -1,13 +1,13 @@
 {
-  "name": "uxlint-monorepo",
+  "name": "uxaudit-monorepo",
   "private": true,
   "version": "0.1.0",
-  "description": "ESLint catches bad code. uxlint catches unfinished UX. Monorepo root.",
+  "description": "ESLint catches bad code. uxaudit catches unfinished UX. Monorepo root.",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build -w @x1n-q/uxlint-core && npm run build -w @x1n-q/uxlint-react && npm run build -w @x1n-q/uxlint && npm run build -w @x1n-q/uxlint-mcp --if-present",
+    "build": "npm run build -w uxaudit-core && npm run build -w uxaudit-react && npm run build -w uxaudit && npm run build -w uxaudit-mcp --if-present",
     "clean": "rm -rf packages/*/dist",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -24,13 +24,13 @@
   },
   "author": "Daniel Depaor <https://github.com/x1n-Q>",
   "license": "MIT",
-  "homepage": "https://github.com/x1n-Q/uxlint#readme",
+  "homepage": "https://github.com/x1n-Q/uxaudit#readme",
   "bugs": {
-    "url": "https://github.com/x1n-Q/uxlint/issues"
+    "url": "https://github.com/x1n-Q/uxaudit/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/x1n-Q/uxlint.git"
+    "url": "git+https://github.com/x1n-Q/uxaudit.git"
   },
   "engines": {
     "node": ">=18"

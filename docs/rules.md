@@ -1,4 +1,4 @@
-# uxlint rules
+# uxaudit rules
 
 All rules are AST + heuristic based. They aim for **low false positives** — they
 only flag a problem when async/data/form patterns clearly exist *and* the
@@ -25,7 +25,7 @@ Floor at 0.
 
 ## Disabling rules
 
-In `uxlint.config.{js,json,ts}`:
+In `uxaudit.config.{js,json,ts}`:
 
 ```js
 module.exports = {

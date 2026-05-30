@@ -1,13 +1,13 @@
-# uxlint
+# uxaudit
 
-> **ESLint catches bad code. uxlint catches unfinished UX.**
+> **ESLint catches bad code. uxaudit catches unfinished UX.**
 
-[![npm version](https://img.shields.io/npm/v/uxlint.svg)](https://www.npmjs.com/package/uxlint)
-[![CI](https://github.com/x1n-Q/uxlint/actions/workflows/test.yml/badge.svg)](https://github.com/x1n-Q/uxlint/actions/workflows/test.yml)
+[![npm version](https://img.shields.io/npm/v/uxaudit.svg)](https://www.npmjs.com/package/uxaudit)
+[![CI](https://github.com/x1n-Q/uxaudit/actions/workflows/test.yml/badge.svg)](https://github.com/x1n-Q/uxaudit/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-purple.svg)](./LICENSE)
 [![Made for AI agents](https://img.shields.io/badge/Made%20for-AI%20agents-8A2BE2.svg)](./docs/ai-usage.md)
 
-`uxlint` scans your React / Next.js code for the UI states humans and AI agents often forget:
+`uxaudit` scans your React / Next.js code for the UI states humans and AI agents often forget:
 
 - 🔄 **Loading** states
 - 📭 **Empty** states
@@ -24,7 +24,7 @@ It's the missing-state checker for modern web apps — built for **humans** *and
 
 AI-generated UIs look complete. Then a user hits an empty list, a slow network, or a failed form submit — and the app falls apart.
 
-`uxlint` is the linter for that gap. Run it before you ship; let your AI agent run it before it claims a feature is "done."
+`uxaudit` is the linter for that gap. Run it before you ship; let your AI agent run it before it claims a feature is "done."
 
 > **The missing-state checker for modern web apps.**
 
@@ -34,39 +34,39 @@ AI-generated UIs look complete. Then a user hits an empty list, a slow network, 
 
 ```bash
 # One-off run
-npx uxlint scan ./src
+npx uxaudit scan ./src
 
 # Or install per-project
-npm install -D uxlint
-npx uxlint scan ./src
+npm install -D uxaudit
+npx uxaudit scan ./src
 ```
 
 ## Quick start
 
 ```bash
 # Human-friendly terminal output
-npx uxlint scan ./src
+npx uxaudit scan ./src
 
 # Machine-readable JSON
-npx uxlint scan ./src --json
+npx uxaudit scan ./src --json
 
 # AI-agent mode: structured task with fix hints for each issue
-npx uxlint scan ./src --json --for-agent
+npx uxaudit scan ./src --json --for-agent
 
 # Markdown report (great for PR comments)
-npx uxlint report ./src --markdown
+npx uxaudit report ./src --markdown
 
 # Create a config file
-npx uxlint init
+npx uxaudit init
 
 # Fail CI when error-severity issues are found
-npx uxlint scan ./src --fail-on error
+npx uxaudit scan ./src --fail-on error
 ```
 
 Sample output:
 
 ```
-uxlint  •  UX completeness scan
+uxaudit  •  UX completeness scan
 
   Score    62/100   ████████████░░░░░░░░
   Framework: react    Files scanned: 23    Issues: 4
@@ -84,16 +84,16 @@ uxlint  •  UX completeness scan
 
 ## Use with AI agents (MCP)
 
-`uxlint` ships an [MCP server](https://modelcontextprotocol.io) so AI coding agents (Claude Desktop, Cursor, Blackbox Code, etc.) can call it as a native tool — **before** they declare a feature done.
+`uxaudit` ships an [MCP server](https://modelcontextprotocol.io) so AI coding agents (Claude Desktop, Cursor, Blackbox Code, etc.) can call it as a native tool — **before** they declare a feature done.
 
 Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
   "mcpServers": {
-    "uxlint": {
+    "uxaudit": {
       "command": "npx",
-      "args": ["-y", "@x1n-q/uxlint-mcp"]
+      "args": ["-y", "@x1n-q/uxaudit-mcp"]
     }
   }
 }
@@ -103,10 +103,10 @@ Tools exposed:
 
 | Tool                | Returns                                                       |
 | ------------------- | ------------------------------------------------------------- |
-| `uxlint_scan`       | Human-readable summary with score + per-issue fix hints       |
-| `uxlint_scan_json`  | Raw agent-task JSON (`task`, `instruction`, `issues[]`)       |
-| `uxlint_report`     | Markdown report (perfect for the agent to paste in a PR)      |
-| `uxlint_list_rules` | All available rules with default severities                   |
+| `uxaudit_scan`       | Human-readable summary with score + per-issue fix hints       |
+| `uxaudit_scan_json`  | Raw agent-task JSON (`task`, `instruction`, `issues[]`)       |
+| `uxaudit_report`     | Markdown report (perfect for the agent to paste in a PR)      |
+| `uxaudit_list_rules` | All available rules with default severities                   |
 
 See [`docs/ai-usage.md`](./docs/ai-usage.md).
 
@@ -114,10 +114,10 @@ See [`docs/ai-usage.md`](./docs/ai-usage.md).
 
 ## Next.js App Router awareness
 
-`uxlint` understands route-level UX files. If your `app/dashboard/page.tsx` doesn't have a local `isLoading` check but `app/dashboard/loading.tsx` exists next to it, it **won't be flagged** — Next.js renders it for you.
+`uxaudit` understands route-level UX files. If your `app/dashboard/page.tsx` doesn't have a local `isLoading` check but `app/dashboard/loading.tsx` exists next to it, it **won't be flagged** — Next.js renders it for you.
 
 ```bash
-npx uxlint scan ./examples/next-app-router
+npx uxaudit scan ./examples/next-app-router
 # → dashboard/page.tsx — silent (covered by loading.tsx + error.tsx)
 # → settings/page.tsx  — flagged (no route-level files, no local handling)
 ```
@@ -131,20 +131,20 @@ See [`docs/next-app-router.md`](./docs/next-app-router.md).
 Drop into any PR workflow:
 
 ```yaml
-# .github/workflows/uxlint.yml
+# .github/workflows/uxaudit.yml
 name: UX Lint
 on:
   pull_request:
 
 jobs:
-  uxlint:
+  uxaudit:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       pull-requests: write   # for sticky PR comments
     steps:
       - uses: actions/checkout@v4
-      - uses: x1n-Q/uxlint@v0.1.0
+      - uses: x1n-Q/uxaudit@v0.1.0
         with:
           path: ./src
           fail-on: error
@@ -154,7 +154,7 @@ jobs:
 You get:
 - ✅ A CI status check that fails on `error`-severity UX issues
 - 💬 A **sticky** PR comment with the markdown report (updates in-place, never spams)
-- 📦 An artifact (`uxlint-report.json` + `uxlint-report.md`)
+- 📦 An artifact (`uxaudit-report.json` + `uxaudit-report.md`)
 
 Full reference: [`docs/github-action.md`](./docs/github-action.md).
 
@@ -176,7 +176,7 @@ Full details and severity weighting: [`docs/rules.md`](./docs/rules.md).
 Disable a rule:
 
 ```js
-// uxlint.config.js
+// uxaudit.config.js
 module.exports = {
   rules: {
     successFeedback: "off",
@@ -193,18 +193,18 @@ Monorepo:
 
 | npm package              | Folder              | Purpose                                      |
 | ------------------------ | ------------------- | -------------------------------------------- |
-| **`uxlint`**             | `packages/cli`      | The CLI you run with `npx uxlint`            |
-| `@x1n-q/uxlint-core`     | `packages/core`     | Scanner, rules engine, reporters             |
-| `@x1n-q/uxlint-react`    | `packages/react`    | React/JSX-specific AST helpers               |
-| `@x1n-q/uxlint-mcp`      | `packages/mcp`      | MCP server for AI agents                     |
+| **`uxaudit`**             | `packages/cli`      | The CLI you run with `npx uxaudit`            |
+| `@x1n-q/uxaudit-core`     | `packages/core`     | Scanner, rules engine, reporters             |
+| `@x1n-q/uxaudit-react`    | `packages/react`    | React/JSX-specific AST helpers               |
+| `@x1n-q/uxaudit-mcp`      | `packages/mcp`      | MCP server for AI agents                     |
 
 ---
 
 ## Development
 
 ```bash
-git clone https://github.com/x1n-Q/uxlint.git
-cd uxlint
+git clone https://github.com/x1n-Q/uxaudit.git
+cd uxaudit
 npm install
 npm run build          # build all 4 packages
 npm test               # vitest unit tests (45 tests)
@@ -234,7 +234,7 @@ npm run test:report    # markdown report
 
 PRs welcome — please read [CONTRIBUTING.md](./CONTRIBUTING.md) first.
 
-The fastest contribution is **a real-world false positive**: open an issue with the smallest reproducible file we get wrong, and uxlint gets better for everyone.
+The fastest contribution is **a real-world false positive**: open an issue with the smallest reproducible file we get wrong, and uxaudit gets better for everyone.
 
 ---
 

@@ -1,6 +1,6 @@
 # react-sample
 
-A tiny set of components used to exercise `uxlint` rules.
+A tiny set of components used to exercise `uxaudit` rules.
 
 | File          | Intentional gaps                                              |
 | ------------- | ------------------------------------------------------------- |
