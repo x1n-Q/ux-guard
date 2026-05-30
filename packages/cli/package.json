@@ -1,5 +1,5 @@
 {
-  "name": "uxlint",
+  "name": "@x1n-q/uxlint",
   "version": "0.1.0",
   "description": "ESLint catches bad code. uxlint catches unfinished UX. A linter for missing UI states (loading, empty, error, validation, disabled submit, success feedback) in React / Next.js. Built for humans and AI coding agents.",
   "main": "dist/index.js",

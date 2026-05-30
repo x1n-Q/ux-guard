@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build -w @x1n-q/uxlint-core && npm run build -w @x1n-q/uxlint-react && npm run build -w uxlint && npm run build -w @x1n-q/uxlint-mcp --if-present",
+    "build": "npm run build -w @x1n-q/uxlint-core && npm run build -w @x1n-q/uxlint-react && npm run build -w @x1n-q/uxlint && npm run build -w @x1n-q/uxlint-mcp --if-present",
     "clean": "rm -rf packages/*/dist",
     "test": "vitest run",
     "test:watch": "vitest",
