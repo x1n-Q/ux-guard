@@ -1,13 +1,13 @@
-# Contributing to uxaudit
+# Contributing to ux-guard
 
-Thanks for considering a contribution! `uxaudit` is an early-stage project and
+Thanks for considering a contribution! `ux-guard` is an early-stage project and
 the most valuable contributions right now are **real-world false positives**
 and **new rules** for things AI agents commonly forget.
 
 ## Quick wins (great first contributions)
 
 - **Report a false positive** — open an issue with the smallest reproducible
-  `.tsx` snippet that uxaudit flags incorrectly. We treat these as bugs.
+  `.tsx` snippet that ux-guard flags incorrectly. We treat these as bugs.
 - **Suggest a new rule** — open an issue with a concrete example of a UX gap
   that's easy to miss. Bonus points for showing how Vue / Svelte handle it.
 - **Improve `aiFixHint` wording** — small word changes that help AI agents
@@ -16,8 +16,8 @@ and **new rules** for things AI agents commonly forget.
 ## Getting set up
 
 ```bash
-git clone https://github.com/x1n-Q/uxaudit.git
-cd uxaudit
+git clone https://github.com/x1n-Q/ux-guard.git
+cd ux-guard
 npm install
 npm run build
 npm test
@@ -31,7 +31,7 @@ Should see all 45 tests pass.
 packages/
   core/    # Scanner, 6 rules, 3 reporters, route-context. Most logic lives here.
   react/   # JSX/AST helpers (currently small; grows as we add Vue/Svelte adapters).
-  cli/     # `uxaudit` CLI — commander + scan/report/init commands.
+  cli/     # `ux-guard` CLI — commander + scan/report/init commands.
   mcp/     # MCP server (Model Context Protocol stdio).
 examples/
   react-sample/       # Bad + good components, used in README and tests.
@@ -62,7 +62,7 @@ docs/                 # rules, AI usage, config, App Router, GitHub Action.
 - **Respect `ctx.route`** for App-Router-aware suppression.
 - **Always include `aiFixHint`** — assume an AI agent will be reading it.
 
-## Running uxaudit locally during development
+## Running ux-guard locally during development
 
 ```bash
 node packages/cli/dist/index.js scan ./examples/react-sample

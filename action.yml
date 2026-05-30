@@ -1,10 +1,10 @@
-name: "uxaudit — UX completeness check"
+name: "ux-guard — UX completeness check"
 description: >
   Scan React / Next.js code for missing UX states (loading, empty, error,
   validation, disabled submit, success feedback) and optionally post a
-  markdown report as a PR comment. ESLint catches bad code — uxaudit catches
+  markdown report as a PR comment. ESLint catches bad code — ux-guard catches
   unfinished UX.
-author: "uxaudit"
+author: "ux-guard"
 branding:
   icon: "check-circle"
   color: "purple"
@@ -27,17 +27,17 @@ inputs:
     required: false
     default: "true"
   version:
-    description: "uxaudit npm version to use (passed to npx). Default: latest."
+    description: "ux-guard npm version to use (passed to npx). Default: latest."
     required: false
     default: "latest"
   working-directory:
-    description: "Subdirectory to run uxaudit in (default: repo root)."
+    description: "Subdirectory to run ux-guard in (default: repo root)."
     required: false
     default: "."
 
 outputs:
   score:
-    description: "uxaudit score 0–100."
+    description: "ux-guard score 0–100."
     value: ${{ steps.scan.outputs.score }}
   issue-count:
     description: "Total number of issues found."
@@ -57,21 +57,21 @@ runs:
       with:
         node-version: "20"
 
-    - name: Run uxaudit scan (JSON)
+    - name: Run ux-guard scan (JSON)
       id: scan
       shell: bash
       working-directory: ${{ inputs.working-directory }}
       run: |
         set -euo pipefail
-        echo "Running uxaudit@${{ inputs.version }} on ${{ inputs.path }}..."
-        npx --yes uxaudit@${{ inputs.version }} scan "${{ inputs.path }}" --json \
-          > uxaudit-report.json
+        echo "Running ux-guard@${{ inputs.version }} on ${{ inputs.path }}..."
+        npx --yes ux-guard@${{ inputs.version }} scan "${{ inputs.path }}" --json \
+          > ux-guard-report.json
 
         # Surface key stats as job outputs.
-        SCORE=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxaudit-report.json','utf8')).score)")
-        ISSUES=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxaudit-report.json','utf8')).issueCount)")
-        ERRORS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxaudit-report.json','utf8')).issues.filter(i=>i.severity==='error').length)")
-        WARNS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxaudit-report.json','utf8')).issues.filter(i=>i.severity==='warn').length)")
+        SCORE=$(node -e "console.log(JSON.parse(require('fs').readFileSync('ux-guard-report.json','utf8')).score)")
+        ISSUES=$(node -e "console.log(JSON.parse(require('fs').readFileSync('ux-guard-report.json','utf8')).issueCount)")
+        ERRORS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('ux-guard-report.json','utf8')).issues.filter(i=>i.severity==='error').length)")
+        WARNS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('ux-guard-report.json','utf8')).issues.filter(i=>i.severity==='warn').length)")
 
         {
           echo "score=$SCORE"
@@ -80,7 +80,7 @@ runs:
           echo "warnings=$WARNS"
         } >> "$GITHUB_OUTPUT"
 
-        echo "::notice title=uxaudit::Score $SCORE/100 — $ISSUES issues ($ERRORS error, $WARNS warn)"
+        echo "::notice title=ux-guard::Score $SCORE/100 — $ISSUES issues ($ERRORS error, $WARNS warn)"
 
     - name: Generate markdown report
       id: report
@@ -88,25 +88,25 @@ runs:
       working-directory: ${{ inputs.working-directory }}
       run: |
         set -euo pipefail
-        npx --yes uxaudit@${{ inputs.version }} report "${{ inputs.path }}" --markdown \
-          > uxaudit-report.md
+        npx --yes ux-guard@${{ inputs.version }} report "${{ inputs.path }}" --markdown \
+          > ux-guard-report.md
 
         {
-          echo "## 🎨 uxaudit — UX Completeness Check"
+          echo "## 🎨 ux-guard — UX Completeness Check"
           echo ""
           echo "**Score:** ${{ steps.scan.outputs.score }}/100"
           echo "**Issues:** ${{ steps.scan.outputs.errors }} error, ${{ steps.scan.outputs.warnings }} warn"
           echo ""
-          cat uxaudit-report.md
-        } > uxaudit-pr-comment.md
+          cat ux-guard-report.md
+        } > ux-guard-pr-comment.md
 
     - name: Upload report artifact
       uses: actions/upload-artifact@v4
       with:
-        name: uxaudit-report
+        name: ux-guard-report
         path: |
-          ${{ inputs.working-directory }}/uxaudit-report.json
-          ${{ inputs.working-directory }}/uxaudit-report.md
+          ${{ inputs.working-directory }}/ux-guard-report.json
+          ${{ inputs.working-directory }}/ux-guard-report.md
         if-no-files-found: warn
 
     - name: Comment on PR
@@ -118,9 +118,9 @@ runs:
         script: |
           const fs = require('fs');
           const path = require('path');
-          const file = path.join(process.env.WORKING_DIR || '.', 'uxaudit-pr-comment.md');
+          const file = path.join(process.env.WORKING_DIR || '.', 'ux-guard-pr-comment.md');
           const body = fs.readFileSync(file, 'utf8');
-          const marker = '<!-- uxaudit-report -->';
+          const marker = '<!-- ux-guard-report -->';
           const fullBody = `${marker}\n${body}`;
 
           const { owner, repo } = context.repo;
@@ -130,7 +130,7 @@ runs:
             return;
           }
 
-          // Update an existing uxaudit comment if present, otherwise create one.
+          // Update an existing ux-guard comment if present, otherwise create one.
           const comments = await github.paginate(github.rest.issues.listComments, {
             owner, repo, issue_number, per_page: 100,
           });
@@ -139,12 +139,12 @@ runs:
             await github.rest.issues.updateComment({
               owner, repo, comment_id: existing.id, body: fullBody,
             });
-            core.info(`Updated existing uxaudit PR comment #${existing.id}.`);
+            core.info(`Updated existing ux-guard PR comment #${existing.id}.`);
           } else {
             await github.rest.issues.createComment({
               owner, repo, issue_number, body: fullBody,
             });
-            core.info('Created uxaudit PR comment.');
+            core.info('Created ux-guard PR comment.');
           }
 
     - name: Enforce fail-on threshold
@@ -157,7 +157,7 @@ runs:
         set -euo pipefail
         node <<'EOF'
         const fs = require('fs');
-        const report = JSON.parse(fs.readFileSync('uxaudit-report.json', 'utf8'));
+        const report = JSON.parse(fs.readFileSync('ux-guard-report.json', 'utf8'));
         const order = { info: 1, warn: 2, error: 3 };
         const t = order[process.env.FAIL_ON];
         if (!t) {
@@ -166,8 +166,8 @@ runs:
         }
         const hit = report.issues.some((i) => order[i.severity] >= t);
         if (hit) {
-          console.error(`::error title=uxaudit::Failing because issues at or above "${process.env.FAIL_ON}" were found.`);
+          console.error(`::error title=ux-guard::Failing because issues at or above "${process.env.FAIL_ON}" were found.`);
           process.exit(1);
         }
-        console.log(`uxaudit OK — no issues at or above "${process.env.FAIL_ON}".`);
+        console.log(`ux-guard OK — no issues at or above "${process.env.FAIL_ON}".`);
         EOF

@@ -1,6 +1,6 @@
 // This page also has NO local isLoading / error UI, AND there is no
 // sibling loading.tsx / error.tsx in this segment.
-// uxaudit SHOULD flag missing_loading_state and missing_error_state.
+// ux-guard SHOULD flag missing_loading_state and missing_error_state.
 import React from "react";
 
 async function getSettings() {

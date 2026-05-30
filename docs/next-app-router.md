@@ -1,11 +1,11 @@
 # Next.js App Router awareness
 
-uxaudit understands how the **Next.js App Router** handles UX states at the
+ux-guard understands how the **Next.js App Router** handles UX states at the
 route level and won't double-flag pages that are already covered.
 
 ## How it works
 
-For every file uxaudit scans, it walks **up** from the file's directory until
+For every file ux-guard scans, it walks **up** from the file's directory until
 it finds an `app/` directory. At each segment along the way it checks for
 sibling files that Next.js renders automatically:
 
@@ -45,7 +45,7 @@ node packages/cli/dist/index.js scan ./examples/next-app-router
 
 ## When it does NOT apply
 
-- **Pages Router** projects (`pages/`) — uxaudit treats them like normal
+- **Pages Router** projects (`pages/`) — ux-guard treats them like normal
   React files and applies all rules.
 - **Files that aren't inside any `app/` directory** — same.
 - **`app-shell/`, `my-app/`, `web-app/` directories** — only a directory
@@ -53,5 +53,5 @@ node packages/cli/dist/index.js scan ./examples/next-app-router
 
 ## Caching
 
-uxaudit caches the route lookup per-directory during a single scan, so
+ux-guard caches the route lookup per-directory during a single scan, so
 even thousand-file repos pay only a handful of `fs.existsSync` calls.

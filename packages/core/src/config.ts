@@ -26,7 +26,7 @@ export const ConfigSchema = z.object({
 export const DEFAULT_CONFIG: UxLintConfig = ConfigSchema.parse({});
 
 /**
- * Load uxaudit.config.{ts,js,json,cjs,mjs} from a given working directory.
+ * Load ux-guard.config.{ts,js,json,cjs,mjs} from a given working directory.
  * Falls back to defaults if no config exists.
  *
  * For TS configs we do a very small "transpile-less" trick: we try to require
@@ -35,11 +35,11 @@ export const DEFAULT_CONFIG: UxLintConfig = ConfigSchema.parse({});
  */
 export function loadConfig(cwd: string): UxLintConfig {
   const candidates = [
-    "uxaudit.config.js",
-    "uxaudit.config.cjs",
-    "uxaudit.config.json",
-    "uxaudit.config.mjs",
-    "uxaudit.config.ts",
+    "ux-guard.config.js",
+    "ux-guard.config.cjs",
+    "ux-guard.config.json",
+    "ux-guard.config.mjs",
+    "ux-guard.config.ts",
   ];
   for (const name of candidates) {
     const p = path.join(cwd, name);
@@ -57,11 +57,11 @@ export function loadConfig(cwd: string): UxLintConfig {
       }
       // .ts / .mjs: skip require in MVP, return defaults but warn.
       console.warn(
-        `[uxaudit] Found ${name} but TS/ESM configs are not loaded in MVP — using defaults. Use uxaudit.config.js or .json for now.`,
+        `[ux-guard] Found ${name} but TS/ESM configs are not loaded in MVP — using defaults. Use ux-guard.config.js or .json for now.`,
       );
       return DEFAULT_CONFIG;
     } catch (err) {
-      console.warn(`[uxaudit] Failed to load ${name}: ${(err as Error).message}`);
+      console.warn(`[ux-guard] Failed to load ${name}: ${(err as Error).message}`);
       return DEFAULT_CONFIG;
     }
   }

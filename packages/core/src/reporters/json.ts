@@ -37,7 +37,7 @@ export function renderAgentJson(result: ScanResult): string {
   const payload: AgentPayload = {
     task: "ux_completeness_scan",
     instruction:
-      "Fix issues with severity 'error' first, then 'warn'. For each issue, follow the aiFixHint and prefer existing components/utilities already present in the project. Do not introduce new UI libraries unless none exist. After fixing, re-run uxaudit to confirm the score improved.",
+      "Fix issues with severity 'error' first, then 'warn'. For each issue, follow the aiFixHint and prefer existing components/utilities already present in the project. Do not introduce new UI libraries unless none exist. After fixing, re-run ux-guard to confirm the score improved.",
     score: result.score,
     framework: result.framework,
     filesScanned: result.filesScanned,

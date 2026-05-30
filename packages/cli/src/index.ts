@@ -8,9 +8,9 @@ import { registerInit } from "./commands/init";
 const program = new Command();
 
 program
-  .name("uxaudit")
+  .name("ux-guard")
   .description(
-    "ESLint catches bad code. uxaudit catches unfinished UX.\n" +
+    "ESLint catches bad code. ux-guard catches unfinished UX.\n" +
       "Scan React / Next.js code for missing UX states (loading, empty, error, validation, etc).",
   )
   .version("0.1.0");
@@ -21,6 +21,6 @@ registerInit(program);
 
 program.parseAsync(process.argv).catch((err) => {
   // eslint-disable-next-line no-console
-  console.error(pc.red("uxaudit crashed:"), err?.stack || err?.message || err);
+  console.error(pc.red("ux-guard crashed:"), err?.stack || err?.message || err);
   process.exit(2);
 });

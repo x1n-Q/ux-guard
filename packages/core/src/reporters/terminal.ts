@@ -18,7 +18,7 @@ export function renderTerminal(result: ScanResult): string {
   const lines: string[] = [];
 
   lines.push("");
-  lines.push(pc.bold(pc.cyan("uxaudit")) + pc.gray("  •  UX completeness scan"));
+  lines.push(pc.bold(pc.cyan("ux-guard")) + pc.gray("  •  UX completeness scan"));
   lines.push("");
   lines.push(
     `  ${pc.bold("Score")}    ${pc.bold(String(result.score))}${pc.gray(

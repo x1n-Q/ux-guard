@@ -3,8 +3,8 @@
 Create a config file at the root of your project:
 
 ```bash
-npx uxaudit init        # creates uxaudit.config.ts
-npx uxaudit init --js   # creates uxaudit.config.js
+npx ux-guard init        # creates ux-guard.config.ts
+npx ux-guard init --js   # creates ux-guard.config.js
 ```
 
 ## Shape
@@ -46,5 +46,5 @@ export default {
 ## Notes
 
 - In the MVP, `.js`, `.cjs`, and `.json` configs are loaded directly.
-  TypeScript configs (`uxaudit.config.ts`) are recognized but currently fall back
+  TypeScript configs (`ux-guard.config.ts`) are recognized but currently fall back
   to defaults with a warning — use `--js` for now or write a `.cjs` file.

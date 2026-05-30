@@ -4,7 +4,7 @@ import {
   scan,
   renderMarkdown,
   renderTerminal,
-} from "uxaudit-core";
+} from "ux-guard-core";
 
 type ReportFlags = {
   markdown?: boolean;

@@ -1,6 +1,6 @@
 # next-app-router example
 
-A miniature Next.js App Router layout to exercise uxaudit's route-level awareness.
+A miniature Next.js App Router layout to exercise ux-guard's route-level awareness.
 
 ```
 app/
@@ -12,7 +12,7 @@ app/
     └── page.tsx      ← fetches data, has NO local UI AND no sibling loading/error
 ```
 
-When you scan this with uxaudit:
+When you scan this with ux-guard:
 
 ```bash
 node packages/cli/dist/index.js scan ./examples/next-app-router

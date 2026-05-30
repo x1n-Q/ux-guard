@@ -1,13 +1,13 @@
 {
-  "name": "uxaudit-monorepo",
+  "name": "ux-guard-monorepo",
   "private": true,
   "version": "0.1.0",
-  "description": "ESLint catches bad code. uxaudit catches unfinished UX. Monorepo root.",
+  "description": "ESLint catches bad code. ux-guard catches unfinished UX. Monorepo root.",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build -w uxaudit-core && npm run build -w uxaudit-react && npm run build -w uxaudit && npm run build -w uxaudit-mcp --if-present",
+    "build": "npm run build -w ux-guard-core && npm run build -w ux-guard-react && npm run build -w ux-guard && npm run build -w ux-guard-mcp --if-present",
     "clean": "rm -rf packages/*/dist",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -24,13 +24,13 @@
   },
   "author": "Daniel Depaor <https://github.com/x1n-Q>",
   "license": "MIT",
-  "homepage": "https://github.com/x1n-Q/uxaudit#readme",
+  "homepage": "https://github.com/x1n-Q/ux-guard#readme",
   "bugs": {
-    "url": "https://github.com/x1n-Q/uxaudit/issues"
+    "url": "https://github.com/x1n-Q/ux-guard/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/x1n-Q/uxaudit.git"
+    "url": "git+https://github.com/x1n-Q/ux-guard.git"
   },
   "engines": {
     "node": ">=18"

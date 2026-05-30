@@ -1,5 +1,5 @@
 // This page intentionally has NO local isLoading / error UI.
-// uxaudit should NOT flag it because `loading.tsx` and `error.tsx`
+// ux-guard should NOT flag it because `loading.tsx` and `error.tsx`
 // sit in the same route segment and Next.js renders them automatically.
 import React from "react";
 

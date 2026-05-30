@@ -110,7 +110,7 @@ export async function scan(opts: ScanOptions): Promise<ScanResult> {
         // Never let a rule crash the scan.
         // eslint-disable-next-line no-console
         console.warn(
-          `[uxaudit] rule "${rule.id}" failed on ${ctx.relativePath}: ${
+          `[ux-guard] rule "${rule.id}" failed on ${ctx.relativePath}: ${
             (err as Error).message
           }`,
         );

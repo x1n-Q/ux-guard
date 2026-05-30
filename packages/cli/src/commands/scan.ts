@@ -7,7 +7,7 @@ import {
   renderJson,
   renderAgentJson,
   type Severity,
-} from "uxaudit-core";
+} from "ux-guard-core";
 
 type ScanFlags = {
   json?: boolean;
@@ -55,7 +55,7 @@ export function registerScan(program: Command) {
           if (!flags.json) {
             process.stderr.write(
               pc.red(
-                `\nuxaudit: failing because issues at or above "${threshold}" were found.\n`,
+                `\nux-guard: failing because issues at or above "${threshold}" were found.\n`,
               ),
             );
           }

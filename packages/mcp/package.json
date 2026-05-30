@@ -1,11 +1,11 @@
 {
-  "name": "uxaudit-mcp",
+  "name": "ux-guard-mcp",
   "version": "0.1.0",
-  "description": "MCP (Model Context Protocol) server that exposes uxaudit as a tool for AI coding agents (Claude Desktop, Cursor, Blackbox Code, etc).",
+  "description": "MCP (Model Context Protocol) server that exposes ux-guard as a tool for AI coding agents (Claude Desktop, Cursor, Blackbox Code, etc).",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "uxaudit-mcp": "dist/index.js"
+    "ux-guard-mcp": "dist/index.js"
   },
   "files": [
     "dist",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.0.4",
-    "uxaudit-core": "0.1.0",
+    "ux-guard-core": "0.1.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
@@ -27,7 +27,7 @@
     "@types/node": "^20.14.10"
   },
   "keywords": [
-    "uxaudit",
+    "ux-guard",
     "mcp",
     "model-context-protocol",
     "ai",
@@ -40,13 +40,13 @@
   ],
   "author": "Daniel Depaor <https://github.com/x1n-Q>",
   "license": "MIT",
-  "homepage": "https://github.com/x1n-Q/uxaudit#readme",
+  "homepage": "https://github.com/x1n-Q/ux-guard#readme",
   "bugs": {
-    "url": "https://github.com/x1n-Q/uxaudit/issues"
+    "url": "https://github.com/x1n-Q/ux-guard/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/x1n-Q/uxaudit.git",
+    "url": "git+https://github.com/x1n-Q/ux-guard.git",
     "directory": "packages/mcp"
   },
   "engines": {

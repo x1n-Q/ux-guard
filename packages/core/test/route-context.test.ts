@@ -12,11 +12,11 @@ let tmp: string;
 beforeAll(() => {
   // os.tmpdir() may not be writable in some sandboxes (e.g. Termux /tmp is RO).
   // Fall back to a hidden dir in HOME so the suite still runs.
-  const candidates = [os.tmpdir(), path.join(os.homedir(), ".uxaudit-test-tmp")];
+  const candidates = [os.tmpdir(), path.join(os.homedir(), ".ux-guard-test-tmp")];
   for (const base of candidates) {
     try {
       fs.mkdirSync(base, { recursive: true });
-      tmp = fs.mkdtempSync(path.join(base, "uxaudit-route-"));
+      tmp = fs.mkdtempSync(path.join(base, "ux-guard-route-"));
       return;
     } catch {
       // try next candidate
