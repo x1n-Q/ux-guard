@@ -1,0 +1,31 @@
+# Dogfood workflow: runs the ux-guard action against the included example apps
+# on every PR. Doubles as a CI signal that the action.yml still works.
+#
+# To use ux-guard in your own repo, copy this file and change:
+#   uses: ./   ->   uses: x1n-Q/ux-guard@v0.1.0
+name: UX Guard
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+jobs:
+  ux-guard:
+    name: ux-guard scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write   # needed for sticky PR comments
+    steps:
+      - uses: actions/checkout@v4
+
+      # Scan a "good" route segment so the action doesn't self-fail in CI.
+      # When you use ux-guard in your own repo, point `path:` at your src dir.
+      - name: Run ux-guard
+        uses: ./
+        with:
+          path: ./examples/next-app-router/app/dashboard
+          fail-on: error
+          comment: "true"

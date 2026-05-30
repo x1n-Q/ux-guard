@@ -1,4 +1,4 @@
-# Unit + build tests for the uxlint monorepo itself.
+# Unit + build tests for the ux-guard monorepo itself.
 name: Test
 
 on:

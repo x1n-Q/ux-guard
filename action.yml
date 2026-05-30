@@ -1,9 +1,5 @@
 name: "ux-guard — UX completeness check"
-description: >
-  Scan React / Next.js code for missing UX states (loading, empty, error,
-  validation, disabled submit, success feedback) and optionally post a
-  markdown report as a PR comment. ESLint catches bad code — ux-guard catches
-  unfinished UX.
+description: "Scan React/Next.js apps for missing UX states and PR-ready reports."
 author: "ux-guard"
 branding:
   icon: "check-circle"
@@ -27,9 +23,9 @@ inputs:
     required: false
     default: "true"
   version:
-    description: "ux-guard npm version to use (passed to npx). Default: latest."
+    description: "ux-guard npm version to use (passed to npx). Pin for reproducible runs."
     required: false
-    default: "latest"
+    default: "0.1.0"
   working-directory:
     description: "Subdirectory to run ux-guard in (default: repo root)."
     required: false
