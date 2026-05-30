@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-05-30
+
+### Changed
+
+- Shortened the GitHub Action metadata description so the action can be published to GitHub Marketplace.
+- Pinned the action's default npm package version to `0.1.0` for reproducible CI runs.
+- Renamed the dogfood workflow and GitHub Action docs from `uxlint` to `ux-guard`.
+
+### Fixed
+
+- Updated the dogfood workflow to scan the covered dashboard route instead of the intentionally incomplete settings route.
+
 ## [0.1.0] - 2026-05-30
 
 Initial public release. 🎉

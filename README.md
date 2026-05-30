@@ -134,7 +134,7 @@ Drop into any PR workflow:
 
 ```yaml
 # .github/workflows/ux-guard.yml
-name: UX Lint
+name: UX Guard
 on:
   pull_request:
 
@@ -146,7 +146,7 @@ jobs:
       pull-requests: write   # for sticky PR comments
     steps:
       - uses: actions/checkout@v4
-      - uses: x1n-Q/ux-guard@v0.1.0
+      - uses: x1n-Q/ux-guard@v0.1.1
         with:
           path: ./src
           fail-on: error
