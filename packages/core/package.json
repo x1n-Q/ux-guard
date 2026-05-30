@@ -1,0 +1,52 @@
+{
+  "name": "@x1n-q/uxlint-core",
+  "version": "0.1.0",
+  "description": "Core scanner, rules, and reporters for uxlint — the missing-state checker for React / Next.js.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "fast-glob": "^3.3.2",
+    "picocolors": "^1.0.1",
+    "ts-morph": "^22.0.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.14.10"
+  },
+  "keywords": [
+    "uxlint",
+    "lint",
+    "ux",
+    "react",
+    "nextjs",
+    "ts-morph",
+    "ast"
+  ],
+  "author": "Daniel Depaor <https://github.com/x1n-Q>",
+  "license": "MIT",
+  "homepage": "https://github.com/x1n-Q/uxlint#readme",
+  "bugs": {
+    "url": "https://github.com/x1n-Q/uxlint/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x1n-Q/uxlint.git",
+    "directory": "packages/core"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

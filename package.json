@@ -1,0 +1,38 @@
+{
+  "name": "uxlint-monorepo",
+  "private": true,
+  "version": "0.1.0",
+  "description": "ESLint catches bad code. uxlint catches unfinished UX. Monorepo root.",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w @x1n-q/uxlint-core && npm run build -w @x1n-q/uxlint-react && npm run build -w uxlint && npm run build -w @x1n-q/uxlint-mcp --if-present",
+    "clean": "rm -rf packages/*/dist",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:example": "node packages/cli/dist/index.js scan ./examples/react-sample",
+    "test:json": "node packages/cli/dist/index.js scan ./examples/react-sample --json",
+    "test:agent": "node packages/cli/dist/index.js scan ./examples/react-sample --json --for-agent",
+    "test:report": "node packages/cli/dist/index.js report ./examples/react-sample --markdown",
+    "test:next": "node packages/cli/dist/index.js scan ./examples/next-app-router",
+    "test:mcp": "node packages/mcp/test-smoke.js"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.5",
+    "typescript": "^5.5.4"
+  },
+  "author": "Daniel Depaor <https://github.com/x1n-Q>",
+  "license": "MIT",
+  "homepage": "https://github.com/x1n-Q/uxlint#readme",
+  "bugs": {
+    "url": "https://github.com/x1n-Q/uxlint/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x1n-Q/uxlint.git"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

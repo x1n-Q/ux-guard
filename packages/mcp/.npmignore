@@ -1,0 +1,6 @@
+src/
+test-smoke.js
+tsconfig.json
+*.tsbuildinfo
+.DS_Store
+node_modules/

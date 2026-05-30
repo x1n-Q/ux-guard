@@ -1,0 +1,62 @@
+{
+  "name": "uxlint",
+  "version": "0.1.0",
+  "description": "ESLint catches bad code. uxlint catches unfinished UX. A linter for missing UI states (loading, empty, error, validation, disabled submit, success feedback) in React / Next.js. Built for humans and AI coding agents.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "uxlint": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node ../../scripts/add-shebang.js dist/index.js || true",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@x1n-q/uxlint-core": "0.1.0",
+    "@x1n-q/uxlint-react": "0.1.0",
+    "commander": "^12.1.0",
+    "picocolors": "^1.0.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.14.10"
+  },
+  "keywords": [
+    "lint",
+    "linter",
+    "ux",
+    "ui",
+    "react",
+    "nextjs",
+    "loading-state",
+    "empty-state",
+    "error-state",
+    "form-validation",
+    "ai",
+    "ai-agents",
+    "mcp",
+    "code-quality"
+  ],
+  "author": "Daniel Depaor <https://github.com/x1n-Q>",
+  "license": "MIT",
+  "homepage": "https://github.com/x1n-Q/uxlint#readme",
+  "bugs": {
+    "url": "https://github.com/x1n-Q/uxlint/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x1n-Q/uxlint.git",
+    "directory": "packages/cli"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

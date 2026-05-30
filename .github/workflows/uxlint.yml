@@ -1,0 +1,31 @@
+# Dogfood workflow: runs the uxlint action against the included example apps
+# on every PR. Doubles as a CI signal that the action.yml still works.
+#
+# To use uxlint in your OWN repo, copy this file and change:
+#   uses: ./   →   uses: x1n-Q/uxlint@v0.1.0
+name: UX Lint
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+
+jobs:
+  uxlint:
+    name: uxlint scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write   # needed for sticky PR comments
+    steps:
+      - uses: actions/checkout@v4
+
+      # Scan a "good" example so the action doesn't self-fail in CI.
+      # When you use uxlint in your own repo, point `path:` at your src dir.
+      - name: Run uxlint
+        uses: ./
+        with:
+          path: ./examples/next-app-router
+          fail-on: error
+          comment: "true"

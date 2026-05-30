@@ -1,0 +1,173 @@
+name: "uxlint — UX completeness check"
+description: >
+  Scan React / Next.js code for missing UX states (loading, empty, error,
+  validation, disabled submit, success feedback) and optionally post a
+  markdown report as a PR comment. ESLint catches bad code — uxlint catches
+  unfinished UX.
+author: "uxlint"
+branding:
+  icon: "check-circle"
+  color: "purple"
+
+inputs:
+  path:
+    description: "File or directory to scan (relative to the repo root)."
+    required: false
+    default: "./src"
+  fail-on:
+    description: >
+      Fail the job if any issue at or above this severity is found.
+      One of: off | info | warn | error. Default: error.
+    required: false
+    default: "error"
+  comment:
+    description: >
+      Post a markdown UX-completeness report as a PR comment.
+      One of: 'true' | 'false'. Defaults to true on pull_request events.
+    required: false
+    default: "true"
+  version:
+    description: "uxlint npm version to use (passed to npx). Default: latest."
+    required: false
+    default: "latest"
+  working-directory:
+    description: "Subdirectory to run uxlint in (default: repo root)."
+    required: false
+    default: "."
+
+outputs:
+  score:
+    description: "uxlint score 0–100."
+    value: ${{ steps.scan.outputs.score }}
+  issue-count:
+    description: "Total number of issues found."
+    value: ${{ steps.scan.outputs.issue_count }}
+  errors:
+    description: "Number of error-severity issues."
+    value: ${{ steps.scan.outputs.errors }}
+  warnings:
+    description: "Number of warn-severity issues."
+    value: ${{ steps.scan.outputs.warnings }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+
+    - name: Run uxlint scan (JSON)
+      id: scan
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        set -euo pipefail
+        echo "Running uxlint@${{ inputs.version }} on ${{ inputs.path }}..."
+        npx --yes uxlint@${{ inputs.version }} scan "${{ inputs.path }}" --json \
+          > uxlint-report.json
+
+        # Surface key stats as job outputs.
+        SCORE=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxlint-report.json','utf8')).score)")
+        ISSUES=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxlint-report.json','utf8')).issueCount)")
+        ERRORS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxlint-report.json','utf8')).issues.filter(i=>i.severity==='error').length)")
+        WARNS=$(node -e "console.log(JSON.parse(require('fs').readFileSync('uxlint-report.json','utf8')).issues.filter(i=>i.severity==='warn').length)")
+
+        {
+          echo "score=$SCORE"
+          echo "issue_count=$ISSUES"
+          echo "errors=$ERRORS"
+          echo "warnings=$WARNS"
+        } >> "$GITHUB_OUTPUT"
+
+        echo "::notice title=uxlint::Score $SCORE/100 — $ISSUES issues ($ERRORS error, $WARNS warn)"
+
+    - name: Generate markdown report
+      id: report
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        set -euo pipefail
+        npx --yes uxlint@${{ inputs.version }} report "${{ inputs.path }}" --markdown \
+          > uxlint-report.md
+
+        {
+          echo "## 🎨 uxlint — UX Completeness Check"
+          echo ""
+          echo "**Score:** ${{ steps.scan.outputs.score }}/100"
+          echo "**Issues:** ${{ steps.scan.outputs.errors }} error, ${{ steps.scan.outputs.warnings }} warn"
+          echo ""
+          cat uxlint-report.md
+        } > uxlint-pr-comment.md
+
+    - name: Upload report artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: uxlint-report
+        path: |
+          ${{ inputs.working-directory }}/uxlint-report.json
+          ${{ inputs.working-directory }}/uxlint-report.md
+        if-no-files-found: warn
+
+    - name: Comment on PR
+      if: ${{ inputs.comment == 'true' && github.event_name == 'pull_request' }}
+      uses: actions/github-script@v7
+      env:
+        WORKING_DIR: ${{ inputs.working-directory }}
+      with:
+        script: |
+          const fs = require('fs');
+          const path = require('path');
+          const file = path.join(process.env.WORKING_DIR || '.', 'uxlint-pr-comment.md');
+          const body = fs.readFileSync(file, 'utf8');
+          const marker = '<!-- uxlint-report -->';
+          const fullBody = `${marker}\n${body}`;
+
+          const { owner, repo } = context.repo;
+          const issue_number = context.issue.number;
+          if (!issue_number) {
+            core.info('No PR number in context; skipping comment.');
+            return;
+          }
+
+          // Update an existing uxlint comment if present, otherwise create one.
+          const comments = await github.paginate(github.rest.issues.listComments, {
+            owner, repo, issue_number, per_page: 100,
+          });
+          const existing = comments.find((c) => c.body && c.body.includes(marker));
+          if (existing) {
+            await github.rest.issues.updateComment({
+              owner, repo, comment_id: existing.id, body: fullBody,
+            });
+            core.info(`Updated existing uxlint PR comment #${existing.id}.`);
+          } else {
+            await github.rest.issues.createComment({
+              owner, repo, issue_number, body: fullBody,
+            });
+            core.info('Created uxlint PR comment.');
+          }
+
+    - name: Enforce fail-on threshold
+      if: ${{ inputs.fail-on != 'off' }}
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      env:
+        FAIL_ON: ${{ inputs.fail-on }}
+      run: |
+        set -euo pipefail
+        node <<'EOF'
+        const fs = require('fs');
+        const report = JSON.parse(fs.readFileSync('uxlint-report.json', 'utf8'));
+        const order = { info: 1, warn: 2, error: 3 };
+        const t = order[process.env.FAIL_ON];
+        if (!t) {
+          console.error(`Invalid fail-on value: ${process.env.FAIL_ON}`);
+          process.exit(2);
+        }
+        const hit = report.issues.some((i) => order[i.severity] >= t);
+        if (hit) {
+          console.error(`::error title=uxlint::Failing because issues at or above "${process.env.FAIL_ON}" were found.`);
+          process.exit(1);
+        }
+        console.log(`uxlint OK — no issues at or above "${process.env.FAIL_ON}".`);
+        EOF

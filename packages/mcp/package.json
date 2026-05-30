@@ -1,0 +1,58 @@
+{
+  "name": "@x1n-q/uxlint-mcp",
+  "version": "0.1.0",
+  "description": "MCP (Model Context Protocol) server that exposes uxlint as a tool for AI coding agents (Claude Desktop, Cursor, Blackbox Code, etc).",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "uxlint-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node ../../scripts/add-shebang.js dist/index.js || true",
+    "clean": "rm -rf dist",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@x1n-q/uxlint-core": "0.1.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.4",
+    "@types/node": "^20.14.10"
+  },
+  "keywords": [
+    "uxlint",
+    "mcp",
+    "model-context-protocol",
+    "ai",
+    "ai-agents",
+    "claude",
+    "cursor",
+    "blackbox",
+    "linter",
+    "react"
+  ],
+  "author": "Daniel Depaor <https://github.com/x1n-Q>",
+  "license": "MIT",
+  "homepage": "https://github.com/x1n-Q/uxlint#readme",
+  "bugs": {
+    "url": "https://github.com/x1n-Q/uxlint/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x1n-Q/uxlint.git",
+    "directory": "packages/mcp"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
